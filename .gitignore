@@ -45,6 +45,7 @@ Debug/
 bin/
 .vs/
 obj/
+wwwroot/
 debug/
 build/
 cmake-build-*/
