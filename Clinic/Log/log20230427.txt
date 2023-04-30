@@ -1,0 +1,2 @@
+{"@t":"2023-04-27T20:07:32.9978752Z","@mt":"This is an informational message."}
+{"@t":"2023-04-27T20:07:33.0267508Z","@mt":"This is a warning for testing purposes.","@l":"Warning"}
