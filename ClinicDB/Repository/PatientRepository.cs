@@ -30,7 +30,8 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return false;
             }
 
@@ -54,6 +55,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
+                errorMsg = ex.Message; 
                 logger.Error(ex.ToString());
                 return false;
             }
@@ -91,7 +93,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return null;
             }
 
@@ -104,7 +106,7 @@ namespace ClinicDB.Repository
             try { return ctx.Patients.ToList(); }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return null;
             }
         }
@@ -147,7 +149,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return null;
             }
 
@@ -164,7 +166,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return null;
             }
         }
@@ -202,7 +204,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return false;
             }
         }
@@ -218,7 +220,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return null;
             }
         }
@@ -230,7 +232,7 @@ namespace ClinicDB.Repository
             try { return ctx.Treatments.Where(f => f.PatientID == Id).ToList(); }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return null;
             }
         }
@@ -244,7 +246,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return null;
             }
 
@@ -262,7 +264,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return false;
             }
         }
@@ -279,7 +281,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return false;
             }
         }
@@ -296,7 +298,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return false;
             }
         }
@@ -310,7 +312,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return false;
             }
 
@@ -327,7 +329,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return null;
             }
 
@@ -342,7 +344,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return null;
             }
         }
@@ -356,7 +358,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return null;
             }
 
@@ -371,7 +373,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return null;
             }
 
@@ -391,7 +393,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return null;
             }
 
@@ -409,7 +411,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return false;
             }
         }
@@ -427,7 +429,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return false;
             }
         }
@@ -441,7 +443,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return null;
             }
 
@@ -474,7 +476,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return null;
             }
 
@@ -491,7 +493,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return null;
             }
 
@@ -515,7 +517,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return null;
             }
 
@@ -531,7 +533,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return null;
             }
 
@@ -567,7 +569,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return false;
             }
         }
@@ -592,7 +594,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return 0;
             }
         }
@@ -618,7 +620,7 @@ namespace ClinicDB.Repository
             }
             catch (Exception ex)
             {
-                logger.Error(ex.ToString());
+                errorMsg = ex.Message;  logger.Error(ex.ToString());
                 return 0;
             }
         }
