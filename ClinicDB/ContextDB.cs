@@ -7,19 +7,11 @@ namespace ClinicDB
 {
     public class ContextDB:DbContext
     {
-        //private readonly ConnectionString _conn;
-
-        //public ContextDB(IOptions<ConnectionString> conn)
-        //{
-        //    _conn = conn.Value;
-        //}
+        
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-       => options.UseSqlServer("Server=.;Database=ClinicDB;Trusted_Connection=True;Encrypt=False;");
-       // =>options.UseSqlServer("Server=mssql-122542-0.cloudclusters.net,10032;Database=ClinicDB;User Id=sohaGamal;Password=246135_Soha;TrustServerCertificate=True;Encrypt=True;");
-       //=> options.UseSqlServer(_conn.ClinicDB);
-
-
-
+       //   => options.UseSqlServer("Server=.;Database=ClinicDB;Trusted_Connection=True;Encrypt=False;");
+         =>options.UseSqlServer("Server=mssql-122542-0.cloudclusters.net,10032;Database=ClinicDB;User Id=sohaGamal;Password=246135_Soha;TrustServerCertificate=True;Encrypt=True;");
+      
         public DbSet<Patient>? Patients { get; set; }
         public DbSet<Visit>? Visits { get; set; }
         public DbSet<Diagnosis>? Diagnoses { get; set; }

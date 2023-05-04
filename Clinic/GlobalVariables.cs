@@ -22,8 +22,8 @@ namespace Clinic
         }
 
         public static long loggedUserID;
-        public static readonly int DiagnosisFees = 500;//kshf
-        public static readonly int ConsultationFees = 0; //estshra
+        public static readonly int DiagnosisFees = 300;//kshf
+        public static readonly int ConsultationFees = 50; //estshra
 
         public static long PatientID { get; set; }
         public static string PatientName { get; set; } =string.Empty;

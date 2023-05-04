@@ -26,7 +26,7 @@ namespace Clinic
             try
             {
                 PatientRepository patientRepository = new PatientRepository();
-                ClinicUser user = patientRepository.Login(txtUserName.Text.Trim(), txtPassword.Text.Trim());
+                ClinicUser user = patientRepository.Login(txtUserName.Text.Trim(), txtPassword.Text.Trim(),logger);
                 if (user != null)
                 {
                     GlobalVariables.LoggedUserName = txtUserName.Text.Trim();

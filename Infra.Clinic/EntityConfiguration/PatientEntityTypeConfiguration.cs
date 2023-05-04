@@ -28,12 +28,8 @@ namespace Infra.Clinic.EntityConfiguration
             builder.Property(x => x.Age).IsRequired();
             builder.Property(x => x.Gender).IsRequired();
 
-            builder.Property(x => x.Mobile).IsRequired();
-            //builder.Property(x => x.Cash).IsRequired();
-            //builder.Property(x => x.InsuranceNumber).IsRequired(false) ;
-
-            //builder.Property(x => x.InsuranceCompanyID).HasDefaultValue(0);
-
+            builder.Property(x => x.Mobile).IsRequired().HasMaxLength(11);
+            
             builder.Property(x => x.FamilyHistory).IsRequired(false);
             builder.Property(x => x.PastHistory).IsRequired(false);
 
@@ -49,6 +45,8 @@ namespace Infra.Clinic.EntityConfiguration
             builder.Property(b => b.ModifiedDate);
             builder.Property(b => b.ModifiedById);
             builder.Property(b => b.RowVersion).HasColumnName("Row_Version").IsRowVersion();
+
+            
         }
       
        

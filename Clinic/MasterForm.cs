@@ -1,4 +1,5 @@
-﻿using ClinicDB;
+﻿using Azure;
+using ClinicDB;
 using ClinicDB.Repository;
 using Infra.Clinic.Entity;
 using Infra.Clinic.IRepository;
@@ -14,7 +15,9 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -31,14 +34,14 @@ namespace Clinic
             logger = GlobalVariables.initializeLogger();
             GlobalVariables.LogCurrentUSer("Master Form Page");
 
-             patientRepository = new PatientRepository();
-            
+            patientRepository = new PatientRepository();
+
             InitializeComponent();
-         
+
             SetTabsAccess();
-            rad_Cash.Checked = true;
-            InitData();
             
+            InitData();
+
         }
         public void SetTabsAccess()
         {
@@ -60,21 +63,35 @@ namespace Clinic
         }
         public void InitData()
         {
+            SetMainCategory();
+            FillInsuranceCompany();
+            FillTreatmentCategoryList();
+
             SetPatientInfo();
             SetPatientDiagnosis();
             SetPatientTreatment();
             SetPatientFollowUp();
             SetPhysicialHistory();
-            SetMainCategory();
-            FillInsuranceCompany();
+            SetPatientName();
+
             SetSearchPatientData();
-            FillTreatmentCategoryList();
+            LoadPatientHistory();
+
+            lblAddPatientFees.Text = GlobalVariables.DiagnosisFees + " LE";
+
+            rad_Cash.Checked = true;
+            pnlInsurandeDetails.Visible = false;
+
+        }
+        public void SetPatientName()
+        {
 
             lblDiagnosisPatientName.Text = SetPatientIdNameLabels();
             lblTreatmentPatientNAme.Text = SetPatientIdNameLabels();
             lblFollowUpPatientName.Text = SetPatientIdNameLabels();
             lblPhysicalHistory.Text = SetPatientIdNameLabels();
             lblSearchPatientName.Text = SetPatientIdNameLabels();
+            lblPatientHistoryNAme.Text = SetPatientIdNameLabels();
 
         }
         public void ClearGlobals()
@@ -96,8 +113,8 @@ namespace Clinic
             logger.Information("method Name ==> " + System.Reflection.MethodBase.GetCurrentMethod().Name);
             try
             {
-                var visits= patientRepository.GetVisitsByPatientID(GlobalVariables.PatientID);
-                if(visits.Count > 0)
+                var visits = patientRepository.GetVisitsByPatientID(GlobalVariables.PatientID, logger);
+                if (visits.Count > 0)
                 {
                     if (visits[0].Cash)
                         rad_SearchCash.Checked = visits[0].Cash;
@@ -117,7 +134,7 @@ namespace Clinic
                 }
                 else
                 {
-                    lblSearchFeesAmount.Text = string.Empty; 
+                    lblSearchFeesAmount.Text = string.Empty;
                     rad_SearchCash.Checked = false;
                     rad_SearchDiagnosis.Checked = false;
                     rad_SearchInsurance.Checked = false;
@@ -141,7 +158,7 @@ namespace Clinic
             logger.Information("method Name ==> " + System.Reflection.MethodBase.GetCurrentMethod().Name);
             try
             {
-                var result = patientRepository.SelectDiagnosisMainCategory();
+                var result = patientRepository.SelectDiagnosisMainCategory(logger);
 
                 ddlMainCategory.DisplayMember = "CombinedField";
                 ddlMainCategory.ValueMember = "Id";
@@ -164,7 +181,7 @@ namespace Clinic
             {
                 if (GlobalVariables.PatientID > 0)
                 {
-                    var physicals = patientRepository.SelectPhysicalHistoryByPatintID(GlobalVariables.PatientID);
+                    var physicals = patientRepository.SelectPhysicalHistoryByPatintID(GlobalVariables.PatientID, logger);
                     if (physicals != null)
                     {
                         foreach (PhysicalHistory p in physicals)
@@ -183,16 +200,16 @@ namespace Clinic
                 logger.Error(ex, ErrorMessages.catchException);
             }
 
-           
+
         }
         public void SetPatientInfo()
         {
-            logger.Information("method Name ==> "+System.Reflection.MethodBase.GetCurrentMethod().Name);
+            logger.Information("method Name ==> " + System.Reflection.MethodBase.GetCurrentMethod().Name);
             try
             {
                 if (GlobalVariables.PatientID > 0)
                 {
-                    var patient = patientRepository.SelectPatientByID(GlobalVariables.PatientID);
+                    var patient = patientRepository.SelectPatientByID(GlobalVariables.PatientID, logger);
                     if (patient != null)
                     {
                         txtFirstName.Text = patient.FirstName;
@@ -209,10 +226,10 @@ namespace Clinic
                         else
                             rad_Insurance.Checked = true;
 
-                        if (patient.Consultation)
-                            rad_Consultation.Checked = true;
-                        else
-                            rad_Diagnosis.Checked = true;
+                        //if (patient.Consultation)
+                        //    rad_Consultation.Checked = true;
+                        //else
+                        rad_Diagnosis.Checked = true;
 
                         if (patient.Gender)
                             rad_Male.Checked = true;
@@ -225,9 +242,9 @@ namespace Clinic
             {
                 logger.Error(ex, ErrorMessages.catchException);
             }
-            
+
         }
-       public void SetPatientDiagnosis()
+        public void SetPatientDiagnosis()
         {
             logger.Information("method Name ==> " + System.Reflection.MethodBase.GetCurrentMethod().Name);
             try
@@ -235,7 +252,7 @@ namespace Clinic
                 StringBuilder strBuilder = new StringBuilder();
                 if (GlobalVariables.PatientID > 0)
                 {
-                    List<Diagnosis> diagnosesLst = patientRepository.SelectDiagnosisByPatientID(GlobalVariables.PatientID);
+                    List<Diagnosis> diagnosesLst = patientRepository.SelectDiagnosisByPatientID(GlobalVariables.PatientID, logger);
                     if (diagnosesLst.Count > 0)
                     {
                         foreach (Diagnosis diagnosis in diagnosesLst)
@@ -258,7 +275,7 @@ namespace Clinic
             {
                 logger.Error(ex, ErrorMessages.catchException);
             }
-           
+
         }
         public void SetPatientTreatment()
         {
@@ -269,7 +286,7 @@ namespace Clinic
 
                 if (GlobalVariables.PatientID > 0)
                 {
-                    List<Treatment> treatments = patientRepository.SelectTreatmentByPatientID(GlobalVariables.PatientID);
+                    List<Treatment> treatments = patientRepository.SelectTreatmentByPatientID(GlobalVariables.PatientID, logger);
                     if (treatments.Count > 0)
                     {
                         foreach (Treatment treatment in treatments)
@@ -304,7 +321,7 @@ namespace Clinic
 
                 if (GlobalVariables.PatientID > 0)
                 {
-                    List<FollowUp> followUps = patientRepository.SelectFollowupByPatientID(GlobalVariables.PatientID);
+                    List<FollowUp> followUps = patientRepository.SelectFollowupByPatientID(GlobalVariables.PatientID, logger);
                     if (followUps.Count > 0)
                     {
                         foreach (FollowUp followUp in followUps)
@@ -327,7 +344,7 @@ namespace Clinic
             {
                 logger.Error(ex, ErrorMessages.catchException);
             }
-          
+
         }
         private void rad_Insurance_CheckedChanged(object sender, EventArgs e)
         {
@@ -345,7 +362,7 @@ namespace Clinic
             try
             {
 
-                var result= patientRepository.GetInsuranceCompany();
+                var result = patientRepository.GetInsuranceCompany(logger);
 
                 lstInsuranceCompany.DisplayMember = "Agency";
                 lstInsuranceCompany.ValueMember = "Id";
@@ -360,7 +377,7 @@ namespace Clinic
             {
                 logger.Error(ex, ErrorMessages.catchException);
             }
-           
+
         }
         private void btn_savePatient_Click(object sender, EventArgs e)
         {
@@ -382,7 +399,7 @@ namespace Clinic
 
                 bool bGender = rad_Female.Checked;
                 bool bInsurance = rad_Insurance.Checked;
-                bool bConsultation = rad_Consultation.Checked;
+                // bool bConsultation = rad_Consultation.Checked;
                 bool bCash = rad_Cash.Checked;
 
                 string insuranceNumber = null;
@@ -412,13 +429,13 @@ namespace Clinic
                 patient.PastHistory = strPastHistory;
                 patient.BirthdDate = birthDate;
 
-                
+
 
                 if (GlobalVariables.PatientID > 0)
                 {
                     patient.ModifiedDate = DateTime.Now;
                     patient.ModifiedById = GlobalVariables.loggedUserID;
-                    if (patientRepository.UpdatePatient(patient, GlobalVariables.PatientID))
+                    if (patientRepository.UpdatePatient(patient, GlobalVariables.PatientID, logger))
                     {
                         MessageBox.Show(ErrorMessages.updatePatientInfo_ar);
                         SetPatientInfo();
@@ -431,7 +448,7 @@ namespace Clinic
                 {
                     patient.CreatedDate = DateTime.Now;
                     patient.CreatedById = GlobalVariables.loggedUserID;
-                    if (patientRepository.InsertPatient(patient))
+                    if (patientRepository.InsertPatient(patient, logger))
                     {
                         Visit visit = new Visit();
                         visit.PatientId = patient.Id;
@@ -448,22 +465,22 @@ namespace Clinic
                         }
 
 
-                        if (bConsultation)
-                        {
-                            visit.Consultation = bConsultation;
-                            visit.fees = GlobalVariables.ConsultationFees;
-                        }
-                        else
-                        {
-                            visit.Consultation = false;
-                            visit.fees = GlobalVariables.DiagnosisFees;
-                        }
+                        //if (bConsultation)
+                        //{
+                        //    visit.Consultation = bConsultation;
+                        //    visit.fees = GlobalVariables.ConsultationFees;
+                        //}
+                        //else
+                        //{
+                        visit.Consultation = false;
+                        visit.fees = GlobalVariables.DiagnosisFees;
+                        // }
                         visit.VisitDate = DateTime.Now;
 
                         visit.CreatedDate = DateTime.Now;
                         visit.CreatedById = GlobalVariables.loggedUserID;
 
-                        patientRepository.InsertVisit(visit);
+                        patientRepository.InsertVisit(visit, logger);
                         MessageBox.Show(ErrorMessages.addedPatientInfo_ar);
                         SetPatientInfo();
                     }
@@ -485,39 +502,41 @@ namespace Clinic
             logger.Information("method Name ==> " + System.Reflection.MethodBase.GetCurrentMethod().Name);
             try
             {
-                var patientLst = patientRepository.SearchPatient(txtSearchFirstname.Text, txtSearchMobile.Text, txtSearchLastName.Text);
+                var patientLst = patientRepository.SearchPatient(txtSearchFirstname.Text, txtSearchMobile.Text, txtSearchLastName.Text, logger);
                 if (patientLst != null)
                     GenerateGrid();
-                
+
                 grdPatientSearchResult.DataSource = patientLst;
-                
-                if(patientLst.Count > 0)
+
+                if (patientLst.Count > 0)
                     grdPatientSearchResult.Show();
                 else
                     grdPatientSearchResult.Hide();
-                lblSearchEmptyGrid.Text = patientLst.Count > 0 ? "total: "+patientLst.Count.ToString() : " لا توجد نتائج";
+                lblSearchEmptyGrid.Text = patientLst.Count > 0 ? "total: " + patientLst.Count.ToString() : " لا توجد نتائج";
 
 
 
-                lblPatientsCount.Text = "pending "+patientRepository.GetPendingPatientsInVisitByDate()+
-                    " / "+patientRepository.GetTotalPatientsInVisitByDate()+" patients";
+                lblPatientsCount.Text = "pending " + patientRepository.GetPendingPatientsInVisitByDate(logger) +
+                    " / " + patientRepository.GetTotalPatientsInVisitByDate(logger) + " patients";
+
+                lblPatientsCount.Visible = true;
             }
             catch (Exception ex)
             {
                 logger.Error(ex, ErrorMessages.catchException);
             }
-           
+
 
         }
         public void GenerateGrid()
         {
             grdPatientSearchResult.Columns.Clear();
             grdPatientSearchResult.DataSource = null;
-            
+
             grdPatientSearchResult.AutoGenerateColumns = false;
             //Set Columns Count
-            grdPatientSearchResult.ColumnCount = 4;
-            
+            grdPatientSearchResult.ColumnCount = 5;
+
             grdPatientSearchResult.Columns[0].HeaderText = "Id";
             grdPatientSearchResult.Columns[0].Name = "Id";
             grdPatientSearchResult.Columns[0].DataPropertyName = "Id";
@@ -526,19 +545,24 @@ namespace Clinic
             grdPatientSearchResult.Columns[1].Name = "PatientName";
             grdPatientSearchResult.Columns[1].DataPropertyName = "CompositeName";
 
-            grdPatientSearchResult.Columns[2].HeaderText = "Finished";
-            grdPatientSearchResult.Columns[2].Name = "Finished";
-            grdPatientSearchResult.Columns[2].DataPropertyName = "isChecked";
+            grdPatientSearchResult.Columns[2].HeaderText = "visitType";
+            grdPatientSearchResult.Columns[2].Name = "visitType";
+            grdPatientSearchResult.Columns[2].DataPropertyName = "visitType";
 
             grdPatientSearchResult.Columns[3].HeaderText = "Visit Date";
             grdPatientSearchResult.Columns[3].Name = "Date";
             grdPatientSearchResult.Columns[3].DataPropertyName = "visitDate";
 
+            grdPatientSearchResult.Columns[4].HeaderText = "Finished";
+            grdPatientSearchResult.Columns[4].Name = "Finished";
+            grdPatientSearchResult.Columns[4].DataPropertyName = "isChecked";
+
+
             DataGridViewButtonColumn btnEdit = new DataGridViewButtonColumn();
             btnEdit.HeaderText = "Display Patient Details";
             btnEdit.Text = "Display";
             btnEdit.Name = "EditButton";
-            btnEdit.UseColumnTextForButtonValue = true; 
+            btnEdit.UseColumnTextForButtonValue = true;
             grdPatientSearchResult.Columns.Add(btnEdit);
 
             grdPatientSearchResult.CellClick += grdPatientSearchResult_CellClick;
@@ -546,8 +570,9 @@ namespace Clinic
             grdPatientSearchResult.Columns[0].Width = 50;
             grdPatientSearchResult.Columns[1].Width = 400;
             grdPatientSearchResult.Columns[2].Width = 100;
-            grdPatientSearchResult.Columns[3].Width = 150;
-            grdPatientSearchResult.Columns[4].Width = 200;
+            grdPatientSearchResult.Columns[3].Width = 100;
+            grdPatientSearchResult.Columns[4].Width = 150;
+            grdPatientSearchResult.Columns[5].Width = 200;
         }
         private void grdPatientSearchResult_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -565,7 +590,7 @@ namespace Clinic
                     {
                         GlobalVariables.PatientID = Id;
                         GlobalVariables.PatientName = CompositeName;
-                        
+
                         InitData();
                     }
                 }
@@ -580,7 +605,7 @@ namespace Clinic
         {
             foreach (DataGridViewRow Myrow in grdPatientSearchResult.Rows)
             {            //Here 2 cell is target value and 1 cell is Volume
-                if ( Convert.ToBoolean(Myrow.Cells[2].Value) )// Or your condition 
+                if (Convert.ToBoolean(Myrow.Cells[4].Value))// Or your condition 
                 {
                     Myrow.DefaultCellStyle.BackColor = Color.LightGreen;
                 }
@@ -604,7 +629,7 @@ namespace Clinic
                     diagnosis.CreatedDate = DateTime.Now;
                     diagnosis.CreatedById = GlobalVariables.loggedUserID;
 
-                    if (patientRepository.InsertDiagnosis(diagnosis))
+                    if (patientRepository.InsertDiagnosis(diagnosis, logger))
                     {
                         MessageBox.Show("Addedd Suuccessfully");
                         SetPatientDiagnosis();
@@ -618,8 +643,8 @@ namespace Clinic
                 }
                 else
                 {
-                    MessageBox.Show("failed to add due to unspecified patient");
-                    logger.Error("failed to add due to unspecified patient");
+                    MessageBox.Show(ErrorMessages.unspecifiedaPatient);
+                    logger.Error(ErrorMessages.unspecifiedaPatient);
                 }
             }
             catch (Exception ex)
@@ -627,7 +652,7 @@ namespace Clinic
                 logger.Error(ex, ErrorMessages.catchException);
             }
 
-           
+
         }
 
         private void btnSaveFollowUp_Click(object sender, EventArgs e)
@@ -645,7 +670,7 @@ namespace Clinic
                     followUp.CreatedDate = DateTime.Now;
                     followUp.CreatedById = GlobalVariables.loggedUserID;
 
-                    if (patientRepository.InsertFollowUp(followUp))
+                    if (patientRepository.InsertFollowUp(followUp, logger))
                     {
                         MessageBox.Show("Addedd Suuccessfully");
                         SetPatientFollowUp();
@@ -667,7 +692,7 @@ namespace Clinic
             {
                 logger.Error(ex, ErrorMessages.catchException);
             }
-           
+
         }
 
         private void btnSaveTreatment_Click(object sender, EventArgs e)
@@ -685,7 +710,7 @@ namespace Clinic
                     treatment.CreatedDate = DateTime.Now;
                     treatment.CreatedById = GlobalVariables.loggedUserID;
 
-                    if (patientRepository.InsertTreatment(treatment))
+                    if (patientRepository.InsertTreatment(treatment, logger))
                     {
                         MessageBox.Show("Addedd Suuccessfully");
                         SetPatientTreatment();
@@ -707,27 +732,11 @@ namespace Clinic
             {
                 logger.Error(ex, ErrorMessages.catchException);
             }
-            
+
         }
         public void ClearTextArea(System.Windows.Forms.TextBox textBox)
         {
             textBox.Text = string.Empty;
-        }
-        private void btn_CancelPatient_Click(object sender, EventArgs e)
-        {
-            logger.Information("method Name ==> " + System.Reflection.MethodBase.GetCurrentMethod().Name);
-            ClearTextArea(txtFirstName);
-            ClearTextArea(txtMiddleName);
-            ClearTextArea(txtLastName);
-
-            ClearTextArea(txtMobile);
-            ClearTextArea(txtAge);
-
-          
-
-            btnCancelSearch_Click(sender,e);
-           
-
         }
 
         public void SetSubCategory(long Id)
@@ -735,7 +744,7 @@ namespace Clinic
             logger.Information("method Name ==> " + System.Reflection.MethodBase.GetCurrentMethod().Name);
             try
             {
-                var result = patientRepository.SelectDiagnosisSubCategory(Id);
+                var result = patientRepository.SelectDiagnosisSubCategory(Id, logger);
 
                 ddlSubCategory.DisplayMember = "CombinedField";
                 ddlSubCategory.ValueMember = "Id";
@@ -746,7 +755,7 @@ namespace Clinic
             {
                 logger.Error(ex, ErrorMessages.catchException);
             }
-           
+
         }
         private void ddlMainCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -759,7 +768,7 @@ namespace Clinic
             {
                 logger.Error(ex, ErrorMessages.catchException);
             }
-          
+
         }
 
         private void btnAddDiagnosis_Click(object sender, EventArgs e)
@@ -775,7 +784,7 @@ namespace Clinic
             {
                 logger.Error(ex, ErrorMessages.catchException);
             }
-          
+
         }
 
         private void btnSavePhysicialHistory_Click(object sender, EventArgs e)
@@ -806,37 +815,58 @@ namespace Clinic
 
             try
             {
-                patientRepository.InsertPhysicalHistory(physicalHistory);
+                patientRepository.InsertPhysicalHistory(physicalHistory, logger);
                 MessageBox.Show("Successfully Added");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.Error(ex, "failed to Add Patient Physical History due to forementioned Exception");
-                MessageBox.Show("failed to Add Patient Physical History due to "+ex.Message);
+                MessageBox.Show("failed to Add Patient Physical History due to " + ex.Message);
             }
 
         }
-
-        private void btnCancelSearch_Click(object sender, EventArgs e)
+        public void ClearFields()
         {
-            txtSearchFirstname.Clear();
-            txtSearchLastName.Clear();
-            txtSearchMobile.Clear();
-            lblSearchFeesAmount.Text= string.Empty;
+            ClearTextArea(txtFirstName);
+            ClearTextArea(txtMiddleName);
+            ClearTextArea(txtLastName);
+            ClearTextArea(txtMobile);
+            ClearTextArea(txtAge);
+
+            ClearTextArea(txtSearchFirstname);
+            ClearTextArea(txtSearchLastName);
+            ClearTextArea(txtSearchMobile);
+
+            lblSearchFeesAmount.Text = string.Empty;
             grdPatientSearchResult.DataSource = null;
             grdPatientSearchResult.Hide();
 
-            txtFamilyHistory.Text = string.Empty;
-            txtPatientHistory.Text = string.Empty;
+            //ClearTextArea(txtFamilyHistory);
+            //ClearTextArea(txtPatientHistory);
 
             txtOldDiagnosis.Text = string.Empty;
             txtOldFollowup.Text = string.Empty;
             txtOldTreatment.Text = string.Empty;
 
-            lblSearchEmptyGrid.Text=string.Empty;
+            lblSearchEmptyGrid.Text = string.Empty;
+        }
+        private void btn_CancelPatient_Click(object sender, EventArgs e)
+        {
+            logger.Information("method Name ==> " + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            ClearFields();
+
+            btnCancelSearch_Click(sender, e);
+
+            lblPatientsCount.Text = "";
+            lblPatientsCount.Visible = false;
+        }
+
+        private void btnCancelSearch_Click(object sender, EventArgs e)
+        {
+            ClearFields();
             InitData();
             ClearGlobals();
-
+            lblPatientsCount.Visible = false;
 
         }
         public double CalculateBMI()
@@ -853,24 +883,24 @@ namespace Clinic
 
                 if (weight > 0 && height > 0)
                     return Math.Round((weight / Math.Pow((height / 100), 2)), 2);
-                
+
             }
             catch (Exception ex)
             {
                 logger.Error(ex, ErrorMessages.catchException);
             }
 
-           return 0;
+            return 0;
         }
 
         private void txtPatientHeight_TextChanged(object sender, EventArgs e)
         {
-                txtBMI.Text = CalculateBMI().ToString();
+            txtBMI.Text = CalculateBMI().ToString();
         }
 
         private void txtPatientWeight_TextChanged(object sender, EventArgs e)
         {
-                txtBMI.Text = CalculateBMI().ToString(); 
+            txtBMI.Text = CalculateBMI().ToString();
         }
 
         private void btnPrintTreatment_Click(object sender, EventArgs e)
@@ -884,12 +914,12 @@ namespace Clinic
             ref int xr, ref int yr, int mx, int my)
         {
             Rectangle bounds = e.PageBounds;
-            
+
             int x = img.Width;
             int y = img.Height;
             int xp = bounds.Width * 9 / 10; // for some reason (I can't explain why)
             int yp = bounds.Height * 9 / 10; // 100% appears larger than the page...
-            
+
             if (x > y)
             {
                 xr = xp - mx;
@@ -906,9 +936,9 @@ namespace Clinic
             printDocument1.DefaultPageSettings.PaperSize = printDocument1.PrinterSettings.PaperSizes[1];
             // this sets the printPreview document size to A4. The previously presented code doesn't
             Image img = menuStrip1.BackgroundImage; // this is what I want to print
-            int xr=0, yr=0;
-            getImageDimensions(img, e, ref xr, ref yr,30,30);
-            
+            int xr = 0, yr = 0;
+            getImageDimensions(img, e, ref xr, ref yr, 30, 30);
+
             Size size = new Size(xr, yr);
             Image copy = (Image)img.Clone();
 
@@ -918,9 +948,9 @@ namespace Clinic
             //e.Graphics.DrawString(SetPrescriptionHeaderForPrint().ToString(), new Font("Times New Roman", 13, FontStyle.Regular), Brushes.Black);
 
             Image img2 = pnlFooter.BackgroundImage; // this is what I want to print
-            int xr2=0, yr2=0;
-            getImageDimensions(img2, e, ref xr2, ref yr2,30,900);
-           
+            int xr2 = 0, yr2 = 0;
+            getImageDimensions(img2, e, ref xr2, ref yr2, 30, 900);
+
             Size size2 = new Size(xr2, yr2);
             Image copy2 = (Image)img2.Clone();
 
@@ -928,9 +958,9 @@ namespace Clinic
         public StringBuilder SetPrescriptionHeaderForPrint()
         {
             logger.Information("method Name ==> " + System.Reflection.MethodBase.GetCurrentMethod().Name);
-           
+
             StringBuilder printText = new StringBuilder();
-            printText.Append((GlobalVariables.PatientTitle+"/ "+GlobalVariables.PatientName).PadLeft(90) );
+            printText.Append((GlobalVariables.PatientTitle + "/ " + GlobalVariables.PatientName).PadLeft(90));
 
             printText.Append(Environment.NewLine);
             printText.Append(Environment.NewLine);
@@ -962,7 +992,34 @@ namespace Clinic
         {
             pnlSearchInsuranceOptions.Visible = false;
         }
+        public bool CheckIfCanConsult()
+        {
+            var patientID = GlobalVariables.PatientID;
+            var patientRecor= patientRepository.SelectPatientByID(patientID, logger);
+            if (patientRecor != null)
+            {
+                if(patientRecor.visitDate < DateTime.Today.Date)
+                {
+                    if(DateTime.Today.Date.Day <= patientRecor.visitDate.Value.Day + 10)
+                            return true;
+                    else
+                    {
+                        logger.Error(ErrorMessages.failedToAddConsultation);
+                        MessageBox.Show(ErrorMessages.failedToAddConsultation);
+                        return false;
+                    }    
+                }
+                else
+                {
+                    logger.Error(ErrorMessages.failedToAddConsultationSameDayError);
+                    MessageBox.Show(ErrorMessages.failedToAddConsultationSameDayError);
+                    return false;
+                }
+            }
+            else
+                return false;
 
+        }
         private void btn_SearchSaveNewData_Click(object sender, EventArgs e)
         {
             logger.Information("method Name ==> " + System.Reflection.MethodBase.GetCurrentMethod().Name);
@@ -972,40 +1029,45 @@ namespace Clinic
                 visit.PatientId = GlobalVariables.PatientID;
 
                 if (rad_SearchConsultation.Checked)
-                {
                     visit.Consultation = rad_SearchConsultation.Checked;
-                    visit.fees = double.Parse(lblSearchFeesAmount.Text);
-                }
                 else
-                {
                     visit.Consultation = false;
+
+
+                if(CheckIfCanConsult())
+                {
                     visit.fees = double.Parse(lblSearchFeesAmount.Text);
-                }
 
-                if (rad_SearchCash.Checked)
-                    visit.Cash = rad_SearchCash.Checked;
+                    if (rad_SearchCash.Checked)
+                        visit.Cash = rad_SearchCash.Checked;
+                    else
+                    {
+                        visit.Cash = false;
+                        visit.InsuranceNumber = txtSearchInsuranceNumber.Text;
+                        int iInsuranceCompany = 0;
+                        var temp = ddl_SearchInsuranceCompany.SelectedValue.ToString();
+                        int.TryParse(temp, out iInsuranceCompany);
+
+                        if (iInsuranceCompany > 0)
+                            visit.InsuranceCompanyID = iInsuranceCompany;
+                    }
+
+                    visit.VisitDate = DateTime.Now;
+                    visit.ModifiedById = GlobalVariables.loggedUserID;
+
+
+                    if (patientRepository.InsertVisit(visit, logger))
+                        MessageBox.Show(ErrorMessages.visitAdded);
+                    else
+                    {
+                        MessageBox.Show(ErrorMessages.failedToAdd);
+                        logger.Error(ErrorMessages.failedToAdd);
+                    }
+                }
                 else
                 {
-                    visit.Cash = false;
-                    visit.InsuranceNumber = txtSearchInsuranceNumber.Text;
-                    int iInsuranceCompany = 0;
-                   var temp= ddl_SearchInsuranceCompany.SelectedValue.ToString();
-                    int.TryParse(temp, out iInsuranceCompany);
-
-                    if (iInsuranceCompany > 0)
-                        visit.InsuranceCompanyID = iInsuranceCompany;
-                }
-
-                visit.CreatedDate = DateTime.Now;
-                visit.CreatedById = GlobalVariables.loggedUserID;
-
-
-                if (patientRepository.InsertVisit(visit))
-                    MessageBox.Show("Addedd Successfully");
-                else
-                {
-                    MessageBox.Show("Failed To Add Visit");
-                    logger.Error("Failed To Add Visit");
+                    logger.Error(ErrorMessages.failedToAddConsultation);
+                    MessageBox.Show(ErrorMessages.failedToAddConsultation);
                 }
 
             }
@@ -1018,7 +1080,7 @@ namespace Clinic
 
         private void rad_SearchDiagnosis_CheckedChanged(object sender, EventArgs e)
         {
-            lblSearchFeesAmount.Text = GlobalVariables.DiagnosisFees.ToString();
+            lblSearchFeesAmount.Text = GlobalVariables.DiagnosisFees.ToString() + " LE";
         }
 
         private void rad_SearchConsultation_CheckedChanged(object sender, EventArgs e)
@@ -1036,7 +1098,7 @@ namespace Clinic
                 int Id = 0;
                 int.TryParse(tempID, out Id);
 
-                var Discount = patientRepository.GetDiscountById(Id);
+                var Discount = patientRepository.GetDiscountById(Id, logger);
                 if (Discount != null)
                 {
                     if (rad_SearchDiagnosis.Checked)
@@ -1050,7 +1112,7 @@ namespace Clinic
             {
                 logger.Error(ex, ErrorMessages.catchException);
             }
-            
+
         }
 
         private void txtBirthDate_ValueChanged(object sender, EventArgs e)
@@ -1073,7 +1135,7 @@ namespace Clinic
             {
                 logger.Error(ex, ErrorMessages.catchException);
             }
-           
+
         }
         public void FillTreatmentCategoryList()
         {
@@ -1081,13 +1143,13 @@ namespace Clinic
 
             try
             {
-                var categories = patientRepository.GetTreatmentCategory();
+                var categories = patientRepository.GetTreatmentCategory(logger);
                 ddlTreatmentCategory.DataSource = categories;
 
                 ddlTreatmentCategory.DisplayMember = "category";
                 ddlTreatmentCategory.ValueMember = "Id";
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.Error(ex, ErrorMessages.catchException);
             }
@@ -1101,57 +1163,128 @@ namespace Clinic
                 var treatmentCategory = ddlTreatmentCategory.SelectedValue;
                 if (treatmentCategory != null)
                 {
-                    var result = patientRepository.GetTreatmentsByCategory((long)treatmentCategory);
+                    var result = patientRepository.GetTreatmentsByCategory((long)treatmentCategory, logger);
 
                     ddlTreatmentMedication.DataSource = result;
 
                     ddlTreatmentMedication.DisplayMember = "productName";
                     ddlTreatmentMedication.ValueMember = "Id";
                 }
-               
-
             }
             catch (Exception ex)
             {
                 logger.Error(ex, ErrorMessages.catchException);
             }
-            
 
         }
-
-      
-
         private void btnAddTreatment_Click(object sender, EventArgs e)
         {
-            StringBuilder str = new StringBuilder();
-            str.Append(((TreatmentProductionName)(ddlTreatmentMedication.SelectedItem)).productName);
-            str.Append(Environment.NewLine);
-            txtNewTreatment.Text += str;
+            logger.Information("method Name ==> " + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            try
+            {
+                if(ddlTreatmentMedication.SelectedIndex > 0 && ddlTreatmentCategory.SelectedIndex > 0)
+                {
+                    StringBuilder str = new StringBuilder();
+                    str.Append(((TreatmentProductionName)(ddlTreatmentMedication.SelectedItem)).productName);
+                    str.Append(Environment.NewLine);
+                    txtNewTreatment.Text += str;
+                }
+                else
+                    MessageBox.Show("Make Sure you have Specified treatment and treatment Catgeory");
+
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, ErrorMessages.catchException);
+                MessageBox.Show(ErrorMessages.failedToAdd_en);
+            }
         }
 
         private void btnFinish_Click(object sender, EventArgs e)
         {
+            logger.Information("method Name ==> " + System.Reflection.MethodBase.GetCurrentMethod().Name);
             try
             {
-                if (patientRepository.FinishPatientVisit(GlobalVariables.PatientID))
-                    MessageBox.Show("finished");
+                if (patientRepository.FinishPatientVisit(GlobalVariables.PatientID, logger))
+                {
+                    GlobalVariables.PatientID = 0;
+                    GlobalVariables.PatientName = string.Empty;
+                    InitData();
+
+                    MessageBox.Show("Patient File is closed Successfully");
+                }
                 else
                     MessageBox.Show("failed to Finish");
             }
             catch (Exception ex)
             {
                 logger.Error(ex, ErrorMessages.catchException);
+                MessageBox.Show("failed to Finish");
             }
         }
 
         private void btnSignout_Click_1(object sender, EventArgs e)
         {
-            this.Close();
-            this.Dispose();
-            Login login = new Login();
-            login.ShowDialog();
+            logger.Information("method Name ==> " + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            try
+            {
+                this.Close();
+                this.Dispose();
+                Login login = new Login();
+                login.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, ErrorMessages.catchException);
+                MessageBox.Show("failed to Signout");
+            }
 
-          
+        }
+        public void LoadPatientHistory()
+        {
+            logger.Information("method Name ==> " + System.Reflection.MethodBase.GetCurrentMethod().Name);
+            try
+            {
+                var patient = patientRepository.SelectPatientByID(GlobalVariables.PatientID, logger);
+                if (patient != null)
+                {
+                    txtFamilyHistory.Text = patient.FamilyHistory;
+                    txtPatientHistory.Text = patient.PastHistory;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, ErrorMessages.catchException);
+            }
+        }
+        private void btnSaveHistory_Click(object sender, EventArgs e)
+        {
+            logger.Information("method Name ==> " + System.Reflection.MethodBase.GetCurrentMethod().Name);
+
+            string strFamilyHistory = txtFamilyHistory.Text;
+            string strPastHistory = txtPatientHistory.Text;
+
+            Patient patient = new Patient();
+
+            patient.FamilyHistory = strFamilyHistory;
+            patient.PastHistory = strPastHistory;
+
+            if (GlobalVariables.PatientID > 0)
+            {
+                patient.ModifiedDate = DateTime.Now;
+                patient.ModifiedById = GlobalVariables.loggedUserID;
+                if (patientRepository.UpdatePatient(patient, GlobalVariables.PatientID, logger))
+                {
+                    MessageBox.Show(ErrorMessages.updatePatientInfo_ar);
+                    SetPatientInfo();
+                }
+                else
+                    MessageBox.Show("failed to update Patient due to " + PatientRepository.errorMsg);
+
+            }
+            else
+                MessageBox.Show(ErrorMessages.unspecifiedaPatient);
         }
     }
 }

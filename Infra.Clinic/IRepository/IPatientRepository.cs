@@ -1,5 +1,6 @@
 ﻿using Infra.Clinic.DTOs;
 using Infra.Clinic.Entity;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,39 +12,39 @@ namespace Infra.Clinic.IRepository
 {
     public interface IPatientRepository
     {
-        bool CheckPatientExists(long Id);
-        List<Patient> SelectAllPatients();
-        PatientDTO SelectPatientByID(long Id);
-        List<Patient> SelectPatientByName(string Name);
-        List<PatientDTO> SearchPatient(string? Name, string? Mobile, string? LastName);
-       
-        List<Diagnosis> SelectDiagnosisByPatientID(long Id);
-        List<Treatment> SelectTreatmentByPatientID(long Id);
-        List<FollowUp> SelectFollowupByPatientID(long Id);
-        List<PhysicalHistory> SelectPhysicalHistoryByPatintID(long Id);
-        List<DiagnosisMainCategory> SelectDiagnosisMainCategory();
-        List<DiagnosisSubCategory> SelectDiagnosisSubCategory(long Id);
-        List<DiagnosisLeafNodes> SelectDiagnosisLeafNodesCategory(long Id);
+        bool CheckPatientExists(long Id, ILogger logger);
+        List<Patient> SelectAllPatients(ILogger logger);
+        PatientDTO SelectPatientByID(long Id, ILogger logger);
+        List<Patient> SelectPatientByName(string Name, ILogger logger);
+        List<PatientDTO> SearchPatient(string? Name, string? Mobile, string? LastName, ILogger logger);
 
-        bool InsertDiagnosis(Diagnosis diagnosis);
-        bool InsertTreatment(Treatment treatment);
-        bool InsertFollowUp(FollowUp followUp);
-        bool InsertPhysicalHistory(PhysicalHistory physicalHistory);
-        bool InsertPatient(Patient patient);
-        bool UpdatePatient(Patient patient, long Id);
-        bool DeletePatient(long Id);
-        bool InsertVisit(Visit visit);
-        ClinicUser Login(string username, string password);
-        DiscountLookup GetDiscountById(long Id);
-        List<Visit> GetVisitsByPatientID(long Id);
+        List<Diagnosis> SelectDiagnosisByPatientID(long Id, ILogger logger);
+        List<Treatment> SelectTreatmentByPatientID(long Id, ILogger logger);
+        List<FollowUp> SelectFollowupByPatientID(long Id, ILogger logger);
+        List<PhysicalHistory> SelectPhysicalHistoryByPatintID(long Id, ILogger logger);
+        List<DiagnosisMainCategory> SelectDiagnosisMainCategory(ILogger logger);
+        List<DiagnosisSubCategory> SelectDiagnosisSubCategory(long Id, ILogger logger);
+        List<DiagnosisLeafNodes> SelectDiagnosisLeafNodesCategory(long Id, ILogger logger);
 
-        List<TreatmentLookup> GetTreatmentCategory();
-        List<TreatmentProductionName> GetTreatmentsByCategory( long categoryID);
+        bool InsertDiagnosis(Diagnosis diagnosis, ILogger logger);
+        bool InsertTreatment(Treatment treatment, ILogger logger);
+        bool InsertFollowUp(FollowUp followUp, ILogger logger);
+        bool InsertPhysicalHistory(PhysicalHistory physicalHistory, ILogger logger);
+        bool InsertPatient(Patient patient, ILogger logger);
+        bool UpdatePatient(Patient patient, long Id, ILogger logger);
+        bool DeletePatient(long Id, ILogger logger);
+        bool InsertVisit(Visit visit, ILogger logger);
+        ClinicUser Login(string username, string password, ILogger logger);
+        DiscountLookup GetDiscountById(long Id, ILogger logger);
+        List<Visit> GetVisitsByPatientID(long Id, ILogger logger);
 
-        List<DiscountLookup> GetInsuranceCompany();
-        bool FinishPatientVisit(long patientId);
-        int GetTotalPatientsInVisitByDate();
-        int GetPendingPatientsInVisitByDate();
+        List<TreatmentLookup> GetTreatmentCategory(ILogger logger);
+        List<TreatmentProductionName> GetTreatmentsByCategory( long categoryID, ILogger logger);
+
+        List<DiscountLookup> GetInsuranceCompany(ILogger  logger);
+        bool FinishPatientVisit(long patientId, ILogger logger);
+        int GetTotalPatientsInVisitByDate(ILogger logger);
+        int GetPendingPatientsInVisitByDate(ILogger logger);
 
 
     }

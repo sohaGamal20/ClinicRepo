@@ -28,5 +28,9 @@ namespace Infra.Clinic.DTOs
 
         public bool? isChecked { get; set; }
         public DateTime? visitDate { get; set; }
+
+        public string visitType { get; set; }
+
+        public long visitId { get; set; }
     }
 }
