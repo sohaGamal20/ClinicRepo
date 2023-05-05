@@ -206,7 +206,7 @@
             this.tabFollowUp.Controls.Add(this.tabFollowUps);
             this.tabFollowUp.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.tabFollowUp.ItemSize = new System.Drawing.Size(90, 28);
-            this.tabFollowUp.Location = new System.Drawing.Point(-113, 27);
+            this.tabFollowUp.Location = new System.Drawing.Point(-134, 27);
             this.tabFollowUp.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.tabFollowUp.Multiline = true;
             this.tabFollowUp.Name = "tabFollowUp";
@@ -1167,9 +1167,9 @@
             // 
             // txtOldDiagnosis
             // 
-            this.txtOldDiagnosis.ReadOnly = true;
             this.txtOldDiagnosis.Location = new System.Drawing.Point(153, 133);
             this.txtOldDiagnosis.Name = "txtOldDiagnosis";
+            this.txtOldDiagnosis.ReadOnly = true;
             this.txtOldDiagnosis.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.txtOldDiagnosis.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth;
             this.txtOldDiagnosis.Size = new System.Drawing.Size(970, 321);
@@ -1310,9 +1310,9 @@
             // 
             // txtOldTreatment
             // 
-            this.txtOldTreatment.ReadOnly = true;
             this.txtOldTreatment.Location = new System.Drawing.Point(86, 108);
             this.txtOldTreatment.Name = "txtOldTreatment";
+            this.txtOldTreatment.ReadOnly = true;
             this.txtOldTreatment.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.txtOldTreatment.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth;
             this.txtOldTreatment.Size = new System.Drawing.Size(927, 267);
@@ -1413,7 +1413,7 @@
             // 
             // txtOldFollowup
             // 
-            this.txtOldFollowup.Enabled = false;
+            this.txtOldFollowup.ReadOnly = true;
             this.txtOldFollowup.Location = new System.Drawing.Point(75, 45);
             this.txtOldFollowup.Name = "txtOldFollowup";
             this.txtOldFollowup.RightToLeft = System.Windows.Forms.RightToLeft.No;

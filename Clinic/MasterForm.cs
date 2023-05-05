@@ -4,7 +4,9 @@ using ClinicDB.Repository;
 using Infra.Clinic.Entity;
 using Infra.Clinic.IRepository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Primitives;
 using Microsoft.VisualBasic.ApplicationServices;
 using Serilog;
 using System;
@@ -950,6 +952,7 @@ namespace Clinic
                 xr = yr * x / y;
             }
         }
+        bool onePage = true;
         private void printDocument1_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
         {
             int linesCount = 0;
@@ -983,7 +986,8 @@ namespace Clinic
             }
 
             if (linesPerPage > maxAcceptedLines)
-            { 
+            {
+                onePage = false;
                 string[] numbers = txtNewTreatment.Lines.Take(maxAcceptedLines).Select(i => i.ToString()).ToArray();
 
                 stringBody = string.Join(System.Environment.NewLine,numbers);
@@ -999,14 +1003,23 @@ namespace Clinic
             }
             else
             { 
-                stringBody=(string.Join(System.Environment.NewLine,
-                    (txtNewTreatment.Lines.Skip(maxAcceptedLines).ToArray())));
+                if(onePage)
+                {
+                    stringBody =txtNewTreatment.Text;
+                    finalTextToBePrinted = stringHeader.ToString() + stringBody.ToString();
+                    e.Graphics.DrawString(finalTextToBePrinted, new Font("Times New Roman", 13, FontStyle.Italic), Brushes.Black,
+                   new PointF(25, 220));
+                }
+                else
+                {
+                    stringBody = (string.Join(System.Environment.NewLine,
+                   (txtNewTreatment.Lines.Skip(maxAcceptedLines).ToArray())));
 
-                finalTextToBePrinted = stringHeader.ToString() + stringBody.ToString();
+                    finalTextToBePrinted = stringHeader.ToString() + stringBody.ToString();
 
-                e.Graphics.DrawString(finalTextToBePrinted, new Font("Times New Roman", 13, FontStyle.Italic), Brushes.Black,
-               new PointF(25, 220));
-                
+                    e.Graphics.DrawString(finalTextToBePrinted, new Font("Times New Roman", 13, FontStyle.Italic), Brushes.Black,
+                   new PointF(25, 220));
+                }
                 e.HasMorePages = false;
 
             }
@@ -1030,8 +1043,8 @@ namespace Clinic
 
             StringBuilder printText = new StringBuilder();
             printText.Append((GlobalVariables.PatientTitle + "/ " + GlobalVariables.PatientName).PadLeft(90));
-
             printText.Append(Environment.NewLine);
+            printText.Append((GlobalVariables.TheDate+" / "+ DateTime.Today.ToShortDateString()).PadLeft(90));
             printText.Append(Environment.NewLine);
             printText.Append(Environment.NewLine);
             printText.Append(Environment.NewLine);

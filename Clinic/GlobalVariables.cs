@@ -28,6 +28,7 @@ namespace Clinic
         public static long PatientID { get; set; }
         public static string PatientName { get; set; } =string.Empty;
         public static string PatientTitle { get; set; } = " الإسم ";
+        public static string TheDate { get; set; } = " التاريخ ";
 
         public static string loggedUserDisplayName = "";
 

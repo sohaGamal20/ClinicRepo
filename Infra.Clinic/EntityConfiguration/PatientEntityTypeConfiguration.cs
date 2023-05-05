@@ -24,7 +24,7 @@ namespace Infra.Clinic.EntityConfiguration
             builder.Property(x => x.MiddleName).IsRequired();
             builder.Property(x => x.FamilyName).IsRequired();
 
-            builder.Property(x => x.CompositeName).HasComputedColumnSql("[FirstName] +' -' +[MiddleName] +','+ [FamilyName]");
+            builder.Property(x => x.CompositeName).HasComputedColumnSql("[FirstName] +' ' +[MiddleName] +' '+ [FamilyName]");
             builder.Property(x => x.Age).IsRequired();
             builder.Property(x => x.Gender).IsRequired();
 
