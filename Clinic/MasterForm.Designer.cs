@@ -35,10 +35,10 @@
             this.btn_CancelPatient = new System.Windows.Forms.Button();
             this.btn_savePatient = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.lblAddPatientFees = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.txtAge = new System.Windows.Forms.TextBox();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.lblAddPatientFees = new System.Windows.Forms.Label();
             this.rad_Diagnosis = new System.Windows.Forms.RadioButton();
             this.panel7 = new System.Windows.Forms.Panel();
             this.rad_Insurance = new System.Windows.Forms.RadioButton();
@@ -105,6 +105,14 @@
             this.txtPatientWeight = new System.Windows.Forms.TextBox();
             this.txtBMI = new System.Windows.Forms.TextBox();
             this.txtPatientHeight = new System.Windows.Forms.TextBox();
+            this.tabPatientHistory = new System.Windows.Forms.TabPage();
+            this.lblPatientHistoryNAme = new System.Windows.Forms.Label();
+            this.pnl_PatientHistory = new System.Windows.Forms.Panel();
+            this.btnSaveHistory = new System.Windows.Forms.Button();
+            this.txtPatientHistory = new System.Windows.Forms.RichTextBox();
+            this.txtFamilyHistory = new System.Windows.Forms.RichTextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
             this.tabDiagnosis = new System.Windows.Forms.TabPage();
             this.panel3 = new System.Windows.Forms.Panel();
             this.btnAddDiagnosis = new System.Windows.Forms.Button();
@@ -141,14 +149,6 @@
             this.label29 = new System.Windows.Forms.Label();
             this.label30 = new System.Windows.Forms.Label();
             this.label31 = new System.Windows.Forms.Label();
-            this.tabPatientHistory = new System.Windows.Forms.TabPage();
-            this.lblPatientHistoryNAme = new System.Windows.Forms.Label();
-            this.pnl_PatientHistory = new System.Windows.Forms.Panel();
-            this.btnSaveHistory = new System.Windows.Forms.Button();
-            this.txtPatientHistory = new System.Windows.Forms.RichTextBox();
-            this.txtFamilyHistory = new System.Windows.Forms.RichTextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.printPreviewDialog1 = new System.Windows.Forms.PrintPreviewDialog();
             this.printDocument1 = new System.Drawing.Printing.PrintDocument();
@@ -171,14 +171,14 @@
             this.panel8.SuspendLayout();
             this.tabPhysicalHistory.SuspendLayout();
             this.panel12.SuspendLayout();
+            this.tabPatientHistory.SuspendLayout();
+            this.pnl_PatientHistory.SuspendLayout();
             this.tabDiagnosis.SuspendLayout();
             this.panel3.SuspendLayout();
             this.tabTreatment.SuspendLayout();
             this.panel5.SuspendLayout();
             this.tabFollowUps.SuspendLayout();
             this.panel11.SuspendLayout();
-            this.tabPatientHistory.SuspendLayout();
-            this.pnl_PatientHistory.SuspendLayout();
             this.panel14.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -200,13 +200,13 @@
             this.tabFollowUp.Controls.Add(this.tabAddPatient);
             this.tabFollowUp.Controls.Add(this.tabSearchPatient);
             this.tabFollowUp.Controls.Add(this.tabPhysicalHistory);
+            this.tabFollowUp.Controls.Add(this.tabPatientHistory);
             this.tabFollowUp.Controls.Add(this.tabDiagnosis);
             this.tabFollowUp.Controls.Add(this.tabTreatment);
             this.tabFollowUp.Controls.Add(this.tabFollowUps);
-            this.tabFollowUp.Controls.Add(this.tabPatientHistory);
             this.tabFollowUp.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.tabFollowUp.ItemSize = new System.Drawing.Size(90, 28);
-            this.tabFollowUp.Location = new System.Drawing.Point(-50, 27);
+            this.tabFollowUp.Location = new System.Drawing.Point(-113, 27);
             this.tabFollowUp.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.tabFollowUp.Multiline = true;
             this.tabFollowUp.Name = "tabFollowUp";
@@ -254,7 +254,6 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.lblAddPatientFees);
             this.panel1.Controls.Add(this.label19);
             this.panel1.Controls.Add(this.txtAge);
             this.panel1.Controls.Add(this.panel6);
@@ -272,25 +271,16 @@
             this.panel1.Controls.Add(this.txtLastName);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.label2);
-            this.panel1.Location = new System.Drawing.Point(690, 32);
+            this.panel1.Location = new System.Drawing.Point(327, 32);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(664, 672);
+            this.panel1.Size = new System.Drawing.Size(1027, 672);
             this.panel1.TabIndex = 0;
-            // 
-            // lblAddPatientFees
-            // 
-            this.lblAddPatientFees.AutoSize = true;
-            this.lblAddPatientFees.Location = new System.Drawing.Point(148, 422);
-            this.lblAddPatientFees.Name = "lblAddPatientFees";
-            this.lblAddPatientFees.Size = new System.Drawing.Size(51, 20);
-            this.lblAddPatientFees.TabIndex = 34;
-            this.lblAddPatientFees.Text = "label1";
             // 
             // label19
             // 
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label19.Location = new System.Drawing.Point(583, 281);
+            this.label19.Location = new System.Drawing.Point(850, 284);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(42, 20);
             this.label19.TabIndex = 33;
@@ -298,25 +288,35 @@
             // 
             // txtAge
             // 
-            this.txtAge.Location = new System.Drawing.Point(176, 271);
+            this.txtAge.Location = new System.Drawing.Point(381, 274);
             this.txtAge.Name = "txtAge";
             this.txtAge.Size = new System.Drawing.Size(350, 27);
             this.txtAge.TabIndex = 32;
             // 
             // panel6
             // 
+            this.panel6.Controls.Add(this.lblAddPatientFees);
             this.panel6.Controls.Add(this.rad_Diagnosis);
-            this.panel6.Location = new System.Drawing.Point(263, 411);
+            this.panel6.Location = new System.Drawing.Point(671, 422);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(151, 53);
+            this.panel6.Size = new System.Drawing.Size(256, 53);
             this.panel6.TabIndex = 31;
+            // 
+            // lblAddPatientFees
+            // 
+            this.lblAddPatientFees.AutoSize = true;
+            this.lblAddPatientFees.Location = new System.Drawing.Point(26, 18);
+            this.lblAddPatientFees.Name = "lblAddPatientFees";
+            this.lblAddPatientFees.Size = new System.Drawing.Size(51, 20);
+            this.lblAddPatientFees.TabIndex = 34;
+            this.lblAddPatientFees.Text = "label1";
             // 
             // rad_Diagnosis
             // 
             this.rad_Diagnosis.AutoSize = true;
             this.rad_Diagnosis.Checked = true;
             this.rad_Diagnosis.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.rad_Diagnosis.Location = new System.Drawing.Point(58, 13);
+            this.rad_Diagnosis.Location = new System.Drawing.Point(174, 14);
             this.rad_Diagnosis.Name = "rad_Diagnosis";
             this.rad_Diagnosis.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.rad_Diagnosis.Size = new System.Drawing.Size(66, 24);
@@ -329,7 +329,7 @@
             // 
             this.panel7.Controls.Add(this.rad_Insurance);
             this.panel7.Controls.Add(this.rad_Cash);
-            this.panel7.Location = new System.Drawing.Point(434, 436);
+            this.panel7.Location = new System.Drawing.Point(326, 422);
             this.panel7.Name = "panel7";
             this.panel7.Size = new System.Drawing.Size(214, 64);
             this.panel7.TabIndex = 30;
@@ -366,16 +366,16 @@
             // 
             this.panel2.Controls.Add(this.rad_Female);
             this.panel2.Controls.Add(this.rad_Male);
-            this.panel2.Location = new System.Drawing.Point(434, 393);
+            this.panel2.Location = new System.Drawing.Point(671, 527);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(214, 37);
+            this.panel2.Size = new System.Drawing.Size(256, 52);
             this.panel2.TabIndex = 29;
             // 
             // rad_Female
             // 
             this.rad_Female.AutoSize = true;
             this.rad_Female.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.rad_Female.Location = new System.Drawing.Point(48, 3);
+            this.rad_Female.Location = new System.Drawing.Point(71, 12);
             this.rad_Female.Name = "rad_Female";
             this.rad_Female.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.rad_Female.Size = new System.Drawing.Size(57, 24);
@@ -388,7 +388,7 @@
             // 
             this.rad_Male.AutoSize = true;
             this.rad_Male.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.rad_Male.Location = new System.Drawing.Point(136, 3);
+            this.rad_Male.Location = new System.Drawing.Point(185, 12);
             this.rad_Male.Name = "rad_Male";
             this.rad_Male.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.rad_Male.Size = new System.Drawing.Size(55, 24);
@@ -399,7 +399,7 @@
             // 
             // txtMobile
             // 
-            this.txtMobile.Location = new System.Drawing.Point(176, 341);
+            this.txtMobile.Location = new System.Drawing.Point(381, 344);
             this.txtMobile.MaxLength = 11;
             this.txtMobile.Name = "txtMobile";
             this.txtMobile.Size = new System.Drawing.Size(350, 27);
@@ -407,7 +407,7 @@
             // 
             // txtBirthDate
             // 
-            this.txtBirthDate.Location = new System.Drawing.Point(176, 219);
+            this.txtBirthDate.Location = new System.Drawing.Point(381, 222);
             this.txtBirthDate.MinDate = new System.DateTime(1900, 12, 1, 0, 0, 0, 0);
             this.txtBirthDate.Name = "txtBirthDate";
             this.txtBirthDate.Size = new System.Drawing.Size(350, 27);
@@ -416,14 +416,14 @@
             // 
             // txtMiddleName
             // 
-            this.txtMiddleName.Location = new System.Drawing.Point(176, 107);
+            this.txtMiddleName.Location = new System.Drawing.Point(381, 110);
             this.txtMiddleName.Name = "txtMiddleName";
             this.txtMiddleName.Size = new System.Drawing.Size(350, 27);
             this.txtMiddleName.TabIndex = 26;
             // 
             // txtFirstName
             // 
-            this.txtFirstName.Location = new System.Drawing.Point(176, 49);
+            this.txtFirstName.Location = new System.Drawing.Point(381, 52);
             this.txtFirstName.Name = "txtFirstName";
             this.txtFirstName.Size = new System.Drawing.Size(350, 27);
             this.txtFirstName.TabIndex = 25;
@@ -434,7 +434,7 @@
             this.pnlInsurandeDetails.Controls.Add(this.txtInsuranceNumber);
             this.pnlInsurandeDetails.Controls.Add(this.label23);
             this.pnlInsurandeDetails.Controls.Add(this.label22);
-            this.pnlInsurandeDetails.Location = new System.Drawing.Point(134, 527);
+            this.pnlInsurandeDetails.Location = new System.Drawing.Point(97, 503);
             this.pnlInsurandeDetails.Name = "pnlInsurandeDetails";
             this.pnlInsurandeDetails.Size = new System.Drawing.Size(463, 125);
             this.pnlInsurandeDetails.TabIndex = 18;
@@ -478,7 +478,7 @@
             // 
             this.label21.AutoSize = true;
             this.label21.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label21.Location = new System.Drawing.Point(576, 341);
+            this.label21.Location = new System.Drawing.Point(843, 344);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(50, 20);
             this.label21.TabIndex = 15;
@@ -496,7 +496,7 @@
             // 
             this.label18.AutoSize = true;
             this.label18.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label18.Location = new System.Drawing.Point(561, 227);
+            this.label18.Location = new System.Drawing.Point(828, 230);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(83, 20);
             this.label18.TabIndex = 7;
@@ -506,7 +506,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label4.Location = new System.Drawing.Point(553, 167);
+            this.label4.Location = new System.Drawing.Point(820, 170);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(80, 20);
             this.label4.TabIndex = 5;
@@ -514,7 +514,7 @@
             // 
             // txtLastName
             // 
-            this.txtLastName.Location = new System.Drawing.Point(176, 163);
+            this.txtLastName.Location = new System.Drawing.Point(381, 166);
             this.txtLastName.Name = "txtLastName";
             this.txtLastName.Size = new System.Drawing.Size(350, 27);
             this.txtLastName.TabIndex = 4;
@@ -523,7 +523,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label3.Location = new System.Drawing.Point(542, 111);
+            this.label3.Location = new System.Drawing.Point(809, 114);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(91, 20);
             this.label3.TabIndex = 3;
@@ -533,7 +533,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label2.Location = new System.Drawing.Point(555, 49);
+            this.label2.Location = new System.Drawing.Point(822, 52);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(79, 20);
             this.label2.TabIndex = 1;
@@ -755,7 +755,7 @@
             this.grdPatientSearchResult.RowTemplate.Height = 29;
             this.grdPatientSearchResult.Size = new System.Drawing.Size(1116, 369);
             this.grdPatientSearchResult.TabIndex = 0;
-            this.grdPatientSearchResult.CellFormatting += grdPatientSearchResult_CellFormatting;
+            this.grdPatientSearchResult.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.grdPatientSearchResult_CellFormatting);
             // 
             // panel8
             // 
@@ -993,6 +993,88 @@
             this.txtPatientHeight.TabIndex = 0;
             this.txtPatientHeight.TextChanged += new System.EventHandler(this.txtPatientHeight_TextChanged);
             // 
+            // tabPatientHistory
+            // 
+            this.tabPatientHistory.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.tabPatientHistory.Controls.Add(this.lblPatientHistoryNAme);
+            this.tabPatientHistory.Controls.Add(this.pnl_PatientHistory);
+            this.tabPatientHistory.Location = new System.Drawing.Point(4, 32);
+            this.tabPatientHistory.Name = "tabPatientHistory";
+            this.tabPatientHistory.Size = new System.Drawing.Size(1351, 884);
+            this.tabPatientHistory.TabIndex = 7;
+            this.tabPatientHistory.Text = "Patient History";
+            // 
+            // lblPatientHistoryNAme
+            // 
+            this.lblPatientHistoryNAme.AutoSize = true;
+            this.lblPatientHistoryNAme.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.lblPatientHistoryNAme.Location = new System.Drawing.Point(667, 18);
+            this.lblPatientHistoryNAme.Name = "lblPatientHistoryNAme";
+            this.lblPatientHistoryNAme.Size = new System.Drawing.Size(63, 20);
+            this.lblPatientHistoryNAme.TabIndex = 13;
+            this.lblPatientHistoryNAme.Text = "Patient:";
+            // 
+            // pnl_PatientHistory
+            // 
+            this.pnl_PatientHistory.AutoScroll = true;
+            this.pnl_PatientHistory.Controls.Add(this.btnSaveHistory);
+            this.pnl_PatientHistory.Controls.Add(this.txtPatientHistory);
+            this.pnl_PatientHistory.Controls.Add(this.txtFamilyHistory);
+            this.pnl_PatientHistory.Controls.Add(this.label6);
+            this.pnl_PatientHistory.Controls.Add(this.label7);
+            this.pnl_PatientHistory.Location = new System.Drawing.Point(61, 41);
+            this.pnl_PatientHistory.Name = "pnl_PatientHistory";
+            this.pnl_PatientHistory.Size = new System.Drawing.Size(1191, 781);
+            this.pnl_PatientHistory.TabIndex = 12;
+            // 
+            // btnSaveHistory
+            // 
+            this.btnSaveHistory.Location = new System.Drawing.Point(528, 683);
+            this.btnSaveHistory.Name = "btnSaveHistory";
+            this.btnSaveHistory.Size = new System.Drawing.Size(286, 61);
+            this.btnSaveHistory.TabIndex = 6;
+            this.btnSaveHistory.Text = "Save";
+            this.btnSaveHistory.UseVisualStyleBackColor = true;
+            this.btnSaveHistory.Click += new System.EventHandler(this.btnSaveHistory_Click);
+            // 
+            // txtPatientHistory
+            // 
+            this.txtPatientHistory.Location = new System.Drawing.Point(649, 58);
+            this.txtPatientHistory.Name = "txtPatientHistory";
+            this.txtPatientHistory.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth;
+            this.txtPatientHistory.Size = new System.Drawing.Size(519, 594);
+            this.txtPatientHistory.TabIndex = 5;
+            this.txtPatientHistory.Text = "";
+            // 
+            // txtFamilyHistory
+            // 
+            this.txtFamilyHistory.Location = new System.Drawing.Point(53, 58);
+            this.txtFamilyHistory.Name = "txtFamilyHistory";
+            this.txtFamilyHistory.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth;
+            this.txtFamilyHistory.Size = new System.Drawing.Size(563, 594);
+            this.txtFamilyHistory.TabIndex = 4;
+            this.txtFamilyHistory.Text = "";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label6.Location = new System.Drawing.Point(844, 22);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(115, 20);
+            this.label6.TabIndex = 3;
+            this.label6.Text = "Patient History";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label7.Location = new System.Drawing.Point(247, 22);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(111, 20);
+            this.label7.TabIndex = 1;
+            this.label7.Text = "Family History";
+            // 
             // tabDiagnosis
             // 
             this.tabDiagnosis.BackColor = System.Drawing.SystemColors.ActiveCaption;
@@ -1085,7 +1167,7 @@
             // 
             // txtOldDiagnosis
             // 
-            this.txtOldDiagnosis.Enabled = false;
+            this.txtOldDiagnosis.ReadOnly = true;
             this.txtOldDiagnosis.Location = new System.Drawing.Point(153, 133);
             this.txtOldDiagnosis.Name = "txtOldDiagnosis";
             this.txtOldDiagnosis.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -1228,7 +1310,7 @@
             // 
             // txtOldTreatment
             // 
-            this.txtOldTreatment.Enabled = false;
+            this.txtOldTreatment.ReadOnly = true;
             this.txtOldTreatment.Location = new System.Drawing.Point(86, 108);
             this.txtOldTreatment.Name = "txtOldTreatment";
             this.txtOldTreatment.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -1377,89 +1459,6 @@
             this.label31.Size = new System.Drawing.Size(101, 23);
             this.label31.TabIndex = 0;
             // 
-            // tabPatientHistory
-            // 
-            this.tabPatientHistory.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.tabPatientHistory.Controls.Add(this.lblPatientHistoryNAme);
-            this.tabPatientHistory.Controls.Add(this.pnl_PatientHistory);
-            this.tabPatientHistory.Location = new System.Drawing.Point(4, 32);
-            this.tabPatientHistory.Name = "tabPatientHistory";
-            this.tabPatientHistory.Size = new System.Drawing.Size(1351, 884);
-            this.tabPatientHistory.TabIndex = 7;
-            this.tabPatientHistory.Text = "Patient History";
-            // 
-            // lblPatientHistoryNAme
-            // 
-            this.lblPatientHistoryNAme.AutoSize = true;
-            this.lblPatientHistoryNAme.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.lblPatientHistoryNAme.Location = new System.Drawing.Point(667, 18);
-            this.lblPatientHistoryNAme.Name = "lblPatientHistoryNAme";
-            this.lblPatientHistoryNAme.Size = new System.Drawing.Size(63, 20);
-            this.lblPatientHistoryNAme.TabIndex = 13;
-            this.lblPatientHistoryNAme.Text = "Patient:";
-            // 
-            // pnl_PatientHistory
-            // 
-            this.pnl_PatientHistory.AutoScroll = true;
-            this.pnl_PatientHistory.Controls.Add(this.btnSaveHistory);
-            this.pnl_PatientHistory.Controls.Add(this.txtPatientHistory);
-            this.pnl_PatientHistory.Controls.Add(this.txtFamilyHistory);
-            this.pnl_PatientHistory.Controls.Add(this.label6);
-            this.pnl_PatientHistory.Controls.Add(this.label7);
-            this.pnl_PatientHistory.Location = new System.Drawing.Point(61, 41);
-            this.pnl_PatientHistory.Name = "pnl_PatientHistory";
-            this.pnl_PatientHistory.Size = new System.Drawing.Size(1191, 781);
-            this.pnl_PatientHistory.TabIndex = 12;
-            // 
-            // btnSaveHistory
-            // 
-            this.btnSaveHistory.Location = new System.Drawing.Point(528, 683);
-            this.btnSaveHistory.Name = "btnSaveHistory";
-            this.btnSaveHistory.Size = new System.Drawing.Size(286, 61);
-            this.btnSaveHistory.TabIndex = 6;
-            this.btnSaveHistory.Text = "Save";
-            this.btnSaveHistory.UseVisualStyleBackColor = true;
-            this.btnSaveHistory.Click += new System.EventHandler(this.btnSaveHistory_Click);
-            // 
-            // txtPatientHistory
-            // 
-            this.txtPatientHistory.Enabled = false;
-            this.txtPatientHistory.Location = new System.Drawing.Point(649, 58);
-            this.txtPatientHistory.Name = "txtPatientHistory";
-            this.txtPatientHistory.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth;
-            this.txtPatientHistory.Size = new System.Drawing.Size(519, 594);
-            this.txtPatientHistory.TabIndex = 5;
-            this.txtPatientHistory.Text = "";
-            // 
-            // txtFamilyHistory
-            // 
-            this.txtFamilyHistory.Location = new System.Drawing.Point(53, 58);
-            this.txtFamilyHistory.Name = "txtFamilyHistory";
-            this.txtFamilyHistory.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth;
-            this.txtFamilyHistory.Size = new System.Drawing.Size(563, 594);
-            this.txtFamilyHistory.TabIndex = 4;
-            this.txtFamilyHistory.Text = "";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label6.Location = new System.Drawing.Point(844, 22);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(115, 20);
-            this.label6.TabIndex = 3;
-            this.label6.Text = "Patient History";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label7.Location = new System.Drawing.Point(247, 22);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(111, 20);
-            this.label7.TabIndex = 1;
-            this.label7.Text = "Family History";
-            // 
             // label8
             // 
             this.label8.Location = new System.Drawing.Point(0, 100);
@@ -1551,6 +1550,10 @@
             this.tabPhysicalHistory.PerformLayout();
             this.panel12.ResumeLayout(false);
             this.panel12.PerformLayout();
+            this.tabPatientHistory.ResumeLayout(false);
+            this.tabPatientHistory.PerformLayout();
+            this.pnl_PatientHistory.ResumeLayout(false);
+            this.pnl_PatientHistory.PerformLayout();
             this.tabDiagnosis.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
@@ -1562,10 +1565,6 @@
             this.tabFollowUps.PerformLayout();
             this.panel11.ResumeLayout(false);
             this.panel11.PerformLayout();
-            this.tabPatientHistory.ResumeLayout(false);
-            this.tabPatientHistory.PerformLayout();
-            this.pnl_PatientHistory.ResumeLayout(false);
-            this.pnl_PatientHistory.PerformLayout();
             this.panel14.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

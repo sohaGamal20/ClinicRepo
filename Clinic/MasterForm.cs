@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
@@ -21,6 +22,7 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Clinic
@@ -29,6 +31,7 @@ namespace Clinic
     {
         public PatientRepository patientRepository;
         private readonly ILogger logger;
+        public int linesPerPage = 0;
         public MasterForm()
         {
             logger = GlobalVariables.initializeLogger();
@@ -59,6 +62,8 @@ namespace Clinic
                 tabFollowUp.TabPages.Remove(tabDiagnosis);
                 tabFollowUp.TabPages.Remove(tabFollowUps);
                 tabFollowUp.TabPages.Remove(tabTreatment);
+                tabFollowUp.TabPages.Remove(tabPatientHistory);
+
             }
         }
         public void InitData()
@@ -775,10 +780,18 @@ namespace Clinic
         {
             try
             {
-                StringBuilder str = new StringBuilder();
-                str.Append(((DiagnosisSubCategory)(ddlSubCategory.SelectedItem)).CombinedField);
-                str.Append(Environment.NewLine);
-                txtNewDiagnosis.Text += str;
+                if (ddlMainCategory.SelectedIndex > 0 && ddlSubCategory.SelectedIndex > -1)
+                {
+                    StringBuilder str = new StringBuilder();
+                    str.Append(((DiagnosisSubCategory)(ddlSubCategory.SelectedItem)).CombinedField);
+                    str.Append(Environment.NewLine);
+                    txtNewDiagnosis.Text += str;
+                }
+                else
+                    MessageBox.Show("Make Sure you have Specified Diagnosis and Diagnosis Catgeory");
+
+
+
             }
             catch (Exception ex)
             {
@@ -907,8 +920,14 @@ namespace Clinic
         {
             logger.Information("method Name ==> " + System.Reflection.MethodBase.GetCurrentMethod().Name);
             //Open print dialog
-            if (printPreviewDialog1.ShowDialog() == DialogResult.OK)
+            linesPerPage = 0;
+
+
+            //printPreviewDialog1.ShowDialog();
+            
+          // if(printPreviewDialog1.DialogResult.Equals(DialogResult.OK) )
                 printDocument1.Print();
+            
         }
         private void getImageDimensions(Image img, System.Drawing.Printing.PrintPageEventArgs e,
             ref int xr, ref int yr, int mx, int my)
@@ -933,8 +952,18 @@ namespace Clinic
         }
         private void printDocument1_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
         {
-            printDocument1.DefaultPageSettings.PaperSize = printDocument1.PrinterSettings.PaperSizes[1];
-            // this sets the printPreview document size to A4. The previously presented code doesn't
+            int linesCount = 0;
+            int maxAcceptedLines = 15;
+
+            StringBuilder stringHeader = new StringBuilder();
+            string stringBody = "";//= new StringBuilder();
+
+            string finalTextToBePrinted = "";
+
+            printDocument1.DefaultPageSettings.PaperSize = printDocument1.PrinterSettings.
+                PaperSizes.Cast<PaperSize>().FirstOrDefault(e => e.PaperName == "A5");
+            
+
             Image img = menuStrip1.BackgroundImage; // this is what I want to print
             int xr = 0, yr = 0;
             getImageDimensions(img, e, ref xr, ref yr, 30, 30);
@@ -942,10 +971,48 @@ namespace Clinic
             Size size = new Size(xr, yr);
             Image copy = (Image)img.Clone();
 
-            e.Graphics.DrawString(SetPrescriptionHeaderForPrint().ToString(), new Font("Times New Roman", 13, FontStyle.Italic), Brushes.Black,
-                new PointF(25, 220));
+            int charactersOnPage = 0;
+            stringHeader = SetPrescriptionHeaderForPrint();
 
-            //e.Graphics.DrawString(SetPrescriptionHeaderForPrint().ToString(), new Font("Times New Roman", 13, FontStyle.Regular), Brushes.Black);
+
+            if (linesPerPage == 0)
+            {
+                stringBody=GetTreatmentForPrint(out linesCount).ToString();
+                e.Graphics.MeasureString(stringBody.ToString(), this.Font,e.MarginBounds.Size,
+                    StringFormat.GenericTypographic,out charactersOnPage, out linesPerPage);
+            }
+
+            if (linesPerPage > maxAcceptedLines)
+            { 
+                string[] numbers = txtNewTreatment.Lines.Take(maxAcceptedLines).Select(i => i.ToString()).ToArray();
+
+                stringBody = string.Join(System.Environment.NewLine,numbers);
+                
+                linesPerPage -= maxAcceptedLines;
+                
+                finalTextToBePrinted = stringHeader.ToString() + stringBody.ToString();
+                e.Graphics.DrawString(finalTextToBePrinted, new Font("Times New Roman", 13, FontStyle.Italic), Brushes.Black,
+               new PointF(25, 220));
+
+                e.HasMorePages = true;
+
+            }
+            else
+            { 
+                stringBody=(string.Join(System.Environment.NewLine,
+                    (txtNewTreatment.Lines.Skip(maxAcceptedLines).ToArray())));
+
+                finalTextToBePrinted = stringHeader.ToString() + stringBody.ToString();
+
+                e.Graphics.DrawString(finalTextToBePrinted, new Font("Times New Roman", 13, FontStyle.Italic), Brushes.Black,
+               new PointF(25, 220));
+                
+                e.HasMorePages = false;
+
+            }
+
+            //e.Graphics.DrawString(finalTextToBePrinted, new Font("Times New Roman", 13, FontStyle.Italic), Brushes.Black,
+            //    new PointF(25, 220));
 
             Image img2 = pnlFooter.BackgroundImage; // this is what I want to print
             int xr2 = 0, yr2 = 0;
@@ -954,8 +1021,10 @@ namespace Clinic
             Size size2 = new Size(xr2, yr2);
             Image copy2 = (Image)img2.Clone();
 
+
         }
-        public StringBuilder SetPrescriptionHeaderForPrint()
+     
+        public StringBuilder SetPrescriptionHeaderForPrint()//string inputTreatment, out int lineCount)
         {
             logger.Information("method Name ==> " + System.Reflection.MethodBase.GetCurrentMethod().Name);
 
@@ -971,15 +1040,18 @@ namespace Clinic
             printText.Append(Environment.NewLine);
             printText.Append(Environment.NewLine);
 
-            printText.Append(txtNewTreatment.Text);
-            printText.Append(Environment.NewLine);
+            //printText.Append(inputTreatment);
+          //  printText.Append(Environment.NewLine);
+
+            //lineCount = 8 + txtNewTreatment.Lines.Count();
             return printText;
         }
-        public StringBuilder GetTreatmentForPrint()
+        public StringBuilder GetTreatmentForPrint(out int lineCount)
         {
             StringBuilder printText = new StringBuilder();
             printText.Append(txtNewTreatment.Text);
             printText.Append(Environment.NewLine);
+            lineCount = 8 + txtNewTreatment.Lines.Count();
             return printText;
         }
 
@@ -1169,6 +1241,7 @@ namespace Clinic
 
                     ddlTreatmentMedication.DisplayMember = "productName";
                     ddlTreatmentMedication.ValueMember = "Id";
+                    
                 }
             }
             catch (Exception ex)
@@ -1182,7 +1255,7 @@ namespace Clinic
             logger.Information("method Name ==> " + System.Reflection.MethodBase.GetCurrentMethod().Name);
             try
             {
-                if(ddlTreatmentMedication.SelectedIndex > 0 && ddlTreatmentCategory.SelectedIndex > 0)
+                if(ddlTreatmentMedication.SelectedIndex > -1 && ddlTreatmentCategory.SelectedIndex > 0)
                 {
                     StringBuilder str = new StringBuilder();
                     str.Append(((TreatmentProductionName)(ddlTreatmentMedication.SelectedItem)).productName);
@@ -1286,5 +1359,7 @@ namespace Clinic
             else
                 MessageBox.Show(ErrorMessages.unspecifiedaPatient);
         }
+
+        
     }
 }

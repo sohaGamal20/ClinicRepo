@@ -182,10 +182,13 @@ namespace ClinicDB.Repository
                 {
                     //inst.InsuranceNumber = patient.InsuranceNumber;
                     //inst.InsuranceCompanyID = patient.InsuranceCompanyID;
+                    if(!string.IsNullOrEmpty(patient.FirstName))
+                        inst.FirstName = patient.FirstName;
+                    if (!string.IsNullOrEmpty(patient.MiddleName))
+                        inst.MiddleName = patient.MiddleName;
 
-                    inst.FirstName = patient.FirstName;
-                    inst.MiddleName = patient.MiddleName;
-                    inst.FamilyName = patient.FamilyName;
+                    if (!string.IsNullOrEmpty(patient.FamilyName))
+                        inst.FamilyName = patient.FamilyName;
 
                     inst.FamilyHistory = patient.FamilyHistory;
                     inst.PastHistory = patient.PastHistory;
