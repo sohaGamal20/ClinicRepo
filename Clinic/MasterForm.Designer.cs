@@ -206,7 +206,7 @@
             this.tabFollowUp.Controls.Add(this.tabFollowUps);
             this.tabFollowUp.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.tabFollowUp.ItemSize = new System.Drawing.Size(90, 28);
-            this.tabFollowUp.Location = new System.Drawing.Point(-134, 27);
+            this.tabFollowUp.Location = new System.Drawing.Point(-50, 27);
             this.tabFollowUp.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.tabFollowUp.Multiline = true;
             this.tabFollowUp.Name = "tabFollowUp";
@@ -1041,6 +1041,7 @@
             // 
             this.txtPatientHistory.Location = new System.Drawing.Point(649, 58);
             this.txtPatientHistory.Name = "txtPatientHistory";
+            this.txtPatientHistory.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.txtPatientHistory.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth;
             this.txtPatientHistory.Size = new System.Drawing.Size(519, 594);
             this.txtPatientHistory.TabIndex = 5;
@@ -1050,6 +1051,7 @@
             // 
             this.txtFamilyHistory.Location = new System.Drawing.Point(53, 58);
             this.txtFamilyHistory.Name = "txtFamilyHistory";
+            this.txtFamilyHistory.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.txtFamilyHistory.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth;
             this.txtFamilyHistory.Size = new System.Drawing.Size(563, 594);
             this.txtFamilyHistory.TabIndex = 4;
@@ -1413,9 +1415,9 @@
             // 
             // txtOldFollowup
             // 
-            this.txtOldFollowup.ReadOnly = true;
             this.txtOldFollowup.Location = new System.Drawing.Point(75, 45);
             this.txtOldFollowup.Name = "txtOldFollowup";
+            this.txtOldFollowup.ReadOnly = true;
             this.txtOldFollowup.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.txtOldFollowup.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth;
             this.txtOldFollowup.Size = new System.Drawing.Size(911, 301);

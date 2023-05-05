@@ -548,26 +548,26 @@ namespace Clinic
             grdPatientSearchResult.Columns[0].Name = "Id";
             grdPatientSearchResult.Columns[0].DataPropertyName = "Id";
 
-            grdPatientSearchResult.Columns[1].HeaderText = "Patient Name";
+            grdPatientSearchResult.Columns[1].HeaderText = "اسم المريض";
             grdPatientSearchResult.Columns[1].Name = "PatientName";
             grdPatientSearchResult.Columns[1].DataPropertyName = "CompositeName";
 
-            grdPatientSearchResult.Columns[2].HeaderText = "visitType";
+            grdPatientSearchResult.Columns[2].HeaderText = "نوع الزيارة";
             grdPatientSearchResult.Columns[2].Name = "visitType";
             grdPatientSearchResult.Columns[2].DataPropertyName = "visitType";
 
-            grdPatientSearchResult.Columns[3].HeaderText = "Visit Date";
+            grdPatientSearchResult.Columns[3].HeaderText = "التاريخ";
             grdPatientSearchResult.Columns[3].Name = "Date";
             grdPatientSearchResult.Columns[3].DataPropertyName = "visitDate";
 
-            grdPatientSearchResult.Columns[4].HeaderText = "Finished";
+            grdPatientSearchResult.Columns[4].HeaderText = "تمت";
             grdPatientSearchResult.Columns[4].Name = "Finished";
             grdPatientSearchResult.Columns[4].DataPropertyName = "isChecked";
 
 
             DataGridViewButtonColumn btnEdit = new DataGridViewButtonColumn();
-            btnEdit.HeaderText = "Display Patient Details";
-            btnEdit.Text = "Display";
+            btnEdit.HeaderText = "عرض تفاصيل المريض";
+            btnEdit.Text = "عرض";
             btnEdit.Name = "EditButton";
             btnEdit.UseColumnTextForButtonValue = true;
             grdPatientSearchResult.Columns.Add(btnEdit);
@@ -1053,10 +1053,6 @@ namespace Clinic
             printText.Append(Environment.NewLine);
             printText.Append(Environment.NewLine);
 
-            //printText.Append(inputTreatment);
-          //  printText.Append(Environment.NewLine);
-
-            //lineCount = 8 + txtNewTreatment.Lines.Count();
             return printText;
         }
         public StringBuilder GetTreatmentForPrint(out int lineCount)
